@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: crmservice
+  labels:
+    co: eminevim 
+    app: crm
+spec:
+  type: NodePort
+  selector:
+    co: eminevim
+    app: crm
+  ports:
+  - nodePort: 30001
+    protocol: TCP
+    port: 8080
+    targetPort: 80
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emin-crm
+  annotations:
+    owner: eminevim
+    releasedate: "21.02.2023"
+    image: "docker.io/eminevimdockertest:crm:v1"
+    email: cengiz.ilkerli@eminevim.com.tr
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      co: eminevim
+      app: crm
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 2
+      maxSurge: 2
+  minReadySeconds: 3
+  template:
+    metadata:
+      labels:
+        co: eminevim
+        app: crm
+    spec:
+      containers:
+      - name: emin-crm-cn
+        image: nginx:latest
+        volumeMounts:
+        - name: crm-rapor-volume
+          mountPath: /Rapor
+        #resources:
+        #  limits:
+        #    memory: 2Gi
+        #    cpu: 2000m
+        ports:
+        - containerPort: 80
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: os
+                operator: In
+                values:
+                - windows
+              - key: co
+                operator: In
+                values:
+                - eminevim
+              - key: app
+                operator: In
+                values:
+                - crm
+      volumes:
+        - name: crm-rapor-volume
+          hostPath:
+            path: /Rapor
+            type: DirectoryOrCreate
