@@ -25,7 +25,7 @@ metadata:
   annotations:
     owner: eminevim
     releasedate: "21.02.2023"
-    image: "docker.io/eminevimdockertest:crm:v1"
+    image: "docker.io/eminevimdockertest/crm:v1"
     email: cengiz.ilkerli@eminevim.com.tr
 spec:
   replicas: 2
@@ -47,7 +47,7 @@ spec:
     spec:
       containers:
       - name: emin-crm-container
-        image: eminevimdockertest:crm:v1
+        image: eminevimdockertest/crm:v1
         volumeMounts:
         - name: crm-rapor-volume
           mountPath: /Rapor
