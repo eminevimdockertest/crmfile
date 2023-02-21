@@ -46,8 +46,8 @@ spec:
         app: crm
     spec:
       containers:
-      - name: emin-crm-cn
-        image: nginx:latest
+      - name: emin-crm-container
+        image: eminevimdockertest:crm:v1
         volumeMounts:
         - name: crm-rapor-volume
           mountPath: /Rapor
